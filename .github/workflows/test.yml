@@ -1,0 +1,10 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: test
+    uses: tenfyzhong/workflows/.github/workflows/fishtape.yml@main
+    with:
+      test-glob: "tests/*.fish"
