@@ -29,3 +29,4 @@
 # https://regex101.com/r/joi3TJ/2
 
 abbr -a _bang -r '^!(?<cmdp>!|-?\d+|\w+|\?\w+\??|#)(?::(?<wordp>\^|\$|\*|-|%|\d+-\d+|\d+\*|-\d+|\d+-|s\^\w+\^\w+\^))?|\^\w+\^\w+\^|!\^|!\$|!\*|!%$' --position anywhere --function _bang
+bind -M insert \r expand-abbr execute
