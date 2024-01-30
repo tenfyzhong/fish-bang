@@ -54,9 +54,11 @@ function _bang_find_cmd -a cmdp
             end
         end
     else if test "$cmdp" = "#"
-        # TODO test
         # !#
-        echo (commandline)
+        set tokens (commandline -o)
+        # remove last word(must be !#)
+        set tokens $tokens[1..-2]
+        echo (string join ' ' $tokens)
     else 
         return 1
     end
