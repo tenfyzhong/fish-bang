@@ -53,6 +53,16 @@ set output (_bang '!$')
 set output (_bang '!*')
 @test 'test !*' "$output" = 'three four five six seven'
 
+@test 'test regex match !%' (string match -q -r $_bang_special_regex '!%') $status -eq 0
+set output (_bang '!%')
+@test 'test !%' "$output" = ''
+_bang '!?bar foobar?'
+set output (_bang '!%')
+@test 'test !%' "$output" = 'bar'
+_bang '!?foo bar foobar?'
+set output (_bang '!%')
+@test 'test !%' "$output" = 'foo'
+
 @test 'test regex match !!' (string match -q -r $_bang_regex '!!') $status -eq 0
 set output (_bang !!)
 @test 'test !!' "$output" = 'cd three four five six seven'
@@ -77,13 +87,14 @@ set output (_bang !-1)
 set output (_bang !ln)
 @test 'test !ln' "$output" = 'ln -s hello world1'
 
-@test 'test regex match !?foo' (string match -q -r $_bang_regex '!?foo') $status -eq 0
-set output (_bang '!?foo')
-@test 'test !?foo' "$output" = 'mv foo bar foobar barfoo foobarfoo'
+# @test 'test regex match !?foo' (string match -q -r $_bang_regex '!?foo') $status -eq 0
+# set output (_bang '!?foo')
+# @test 'test !?foo' "$output" = 'mv foo bar foobar barfoo foobarfoo'
 
 @test 'test regex match !?foo?' (string match -q -r $_bang_regex '!?foo?') $status -eq 0
 set output (_bang '!?foo?')
 @test 'test !?foo?' "$output" = 'mv foo bar foobar barfoo foobarfoo'
+@test 'test _bind_last_search' "$_bind_last_search" = "foo"
 
 @test 'test regex match !#' (string match -q -r $_bang_regex '!#') $status -eq 0
 mock_commandline 'cd go !#'
@@ -256,6 +267,16 @@ set output (_bang '!mv*')
 @test 'test regex match !mv:-' (string match -q -r $_bang_regex '!mv:-') $status -eq 0
 set output (_bang '!mv:-')
 @test 'test !mv:-' "$output" = 'mv foo bar foobar barfoo'
+
+@test 'test regex match !mv:%' (string match -q -r $_bang_regex '!mv:%') $status -eq 0
+_bang '!?foo bar foobar?'
+set output (_bang '!mv:%')
+@test 'test !mv:%' "$output" = 'foo'
+
+@test 'test regex match !mv%' (string match -q -r $_bang_regex '!mv%') $status -eq 0
+_bang '!?foo bar foobar?'
+set output (_bang '!mv%')
+@test 'test !mv%' "$output" = 'foo'
 
 @test 'test regex match !mv-' (string match -q -r $_bang_regex '!mv-') $status -eq 0
 set output (_bang '!mv-')

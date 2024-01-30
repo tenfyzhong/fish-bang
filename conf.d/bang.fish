@@ -5,7 +5,7 @@
 # !-n
 # !n
 # !string
-# !?string[?] (the last ? is optional)
+# !?string?
 # !#
 # 
 # Part 2: Word Designators 
@@ -28,7 +28,7 @@
 # ^string1^string2^
 
 # https://regex101.com/r/gYfhPu/2
-set -gx _bang_regex '^!(?<cmdp>!|-?\d+|\w+|\?[^?]+\??|#)(?<wordp>:?\^|:?\$|:?\*|:?-|:?%|:\d+-\d+|:\d+\*|:-\d+|:\d+-|:s\^[^^]+\^[^^]+\^?)?$'
+set -gx _bang_regex '^!(?<cmdp>!|-?\d+|\w+|\?[^?]+\?|#)(?<wordp>:?\^|:?\$|:?\*|:?-|:?%|:\d+-\d+|:\d+\*|:-\d+|:\d+-|:s\^[^^]+\^[^^]+\^?)?$'
 abbr -a _bang -r $_bang_regex --position anywhere --function _bang
 
 # https://regex101.com/r/V4nhLy/1
