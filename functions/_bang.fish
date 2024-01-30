@@ -126,6 +126,14 @@ function _bang_find_word -a cmd -a wordp
         # plus 1
         set x (math "$x+1")
         echo (string join ' ' $token[$x..-1])
+    else if string match -q -r -- '^(?<x>\d+)$' "$wordmatch" 
+        # x
+
+        # index 0 match command
+        # we use the token array to match the result, so the args index should
+        # plus 1
+        set x (math "$x+1")
+        echo (string join ' ' $token[$x])
     else if string match -q -r -- '^s?\^(?<s1>[^^]+)\^(?<s2>[^^]+)\^?$' "$wordmatch"
         # s^s1^s2^
         # ^s1^s2^

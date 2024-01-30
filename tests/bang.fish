@@ -181,9 +181,17 @@ set output (_bang '!!:4-')
 set output (_bang '!!:0-')
 @test 'test !!:0-' "$output" = 'cd three four five six'
 
+@test 'test regex match !!:0' (string match -q -r $_bang_regex '!!:0') $status -eq 0
+set output (_bang '!!:0')
+@test 'test !!:0' "$output" = 'cd'
+
 @test 'test regex match !!:1-' (string match -q -r $_bang_regex '!!:1-') $status -eq 0
 set output (_bang '!!:1-')
 @test 'test !!:1-' "$output" = 'three four five six'
+
+@test 'test regex match !!:1' (string match -q -r $_bang_regex '!!:1') $status -eq 0
+set output (_bang '!!:1')
+@test 'test !!:1' "$output" = 'three'
 
 @test 'test regex match !!:4-' (string match -q -r $_bang_regex '!!:4-') $status -eq 0
 set output (_bang '!!:4-')
@@ -209,9 +217,17 @@ set output (_bang '!!:-1')
 set output (_bang '!!:-5')
 @test 'test !!:-5' "$output" = 'cd three four five six seven'
 
+@test 'test regex match !!:5' (string match -q -r $_bang_regex '!!:5') $status -eq 0
+set output (_bang '!!:5')
+@test 'test !!:5' "$output" = 'seven'
+
 @test 'test regex match !!:-6' (string match -q -r $_bang_regex '!!:-6') $status -eq 0
 set output (_bang '!!:-6')
 @test 'test !!:-6' "$output" = 'cd three four five six seven'
+
+@test 'test regex match !!:6' (string match -q -r $_bang_regex '!!:6') $status -eq 0
+set output (_bang '!!:6')
+@test 'test !!:6' "$output" = ''
 
 @test 'test regex match !!:0*' (string match -q -r $_bang_regex '!!:0*') $status -eq 0
 set output (_bang '!!:0*')
