@@ -5,7 +5,7 @@ function _bang -a pattern
             _bang_find_word "$cmd" (string sub -s 2 $pattern)
             return 0
         case '!%'
-            set tokens (string split ' ' $_bind_last_search)
+            set tokens (string split ' ' $_bang_last_search)
             echo $tokens[1]
         case '^*^*' '^*^*^'
             set cmd $history[1]
@@ -50,7 +50,7 @@ function _bang_find_cmd -a cmdp
         # !?string?
         for cmd in $history 
             if string match -q -r -- "$key" "$cmd"
-                set -gx _bind_last_search "$key"
+                set -gx _bang_last_search "$key"
                 echo $cmd
                 return 0
             end
@@ -95,7 +95,7 @@ function _bang_find_word -a cmd -a wordp
         echo (string join ' ' $token[1..-2])
     else if test "$wordmatch" = '%'
         # :%
-        set tokens (string split ' ' $_bind_last_search)
+        set tokens (string split ' ' $_bang_last_search)
         echo $tokens[1]
     else if string match -q -r -- '^(?<x>\d+)?-(?<y>\d+)?$' "$wordmatch"
         # x-y

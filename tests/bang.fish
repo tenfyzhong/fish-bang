@@ -1,7 +1,9 @@
-function init
-    set -gx fish_history bang
+function init -a session -a use_history
+    set -e _bang_last_search
+    set -gx fish_history $session
     set q (history_path)
-    echo "- cmd: ls -a -l one two
+    if test "$use_history" = 1
+        echo "- cmd: ls -a -l one two
   when: 1706449070
 - cmd: ln -s hello world
   when: 1706449079
@@ -12,12 +14,14 @@ function init
 - cmd: cd three four five six seven
   when: 1706449080
 " > $q
+    end
 end
 
 function deinit
     set q (history_path)
     rm -f "$q"
     set -e fish_history
+    set -e _bang_last_search
     echo ''
 end
 
@@ -39,7 +43,7 @@ function demock_commandline
     functions -e commandline
 end
 
-init
+init bang 1
 
 @test 'test regex match !^' (string match -q -r $_bang_special_regex '!^') $status -eq 0
 set output (_bang '!^')
@@ -75,7 +79,15 @@ set output (_bang !2)
 set output (_bang !3)
 @test 'test !3' "$output" = 'ln -s hello world1'
 
-@test 'test regex match !3' (string match -q -r $_bang_regex '!3') $status -eq 0
+@test 'test regex match !6' (string match -q -r $_bang_regex '!6') $status -eq 0
+set output (_bang !6)
+@test 'test !6' "$output" = ''
+
+@test 'test regex match !-6' (string match -q -r $_bang_regex '!-6') $status -eq 0
+set output (_bang !-6)
+@test 'test !-6' "$output" = ''
+
+@test 'test regex match !-2' (string match -q -r $_bang_regex '!-2') $status -eq 0
 set output (_bang !-2)
 @test 'test !-2' "$output" = 'ln -s hello world'
 
@@ -87,6 +99,10 @@ set output (_bang !-1)
 set output (_bang !ln)
 @test 'test !ln' "$output" = 'ln -s hello world1'
 
+@test 'test regex match !rm' (string match -q -r $_bang_regex '!rm') $status -eq 0
+set output (_bang !rm)
+@test 'test !rm' "$output" = ''
+
 # @test 'test regex match !?foo' (string match -q -r $_bang_regex '!?foo') $status -eq 0
 # set output (_bang '!?foo')
 # @test 'test !?foo' "$output" = 'mv foo bar foobar barfoo foobarfoo'
@@ -94,7 +110,7 @@ set output (_bang !ln)
 @test 'test regex match !?foo?' (string match -q -r $_bang_regex '!?foo?') $status -eq 0
 set output (_bang '!?foo?')
 @test 'test !?foo?' "$output" = 'mv foo bar foobar barfoo foobarfoo'
-@test 'test _bind_last_search' "$_bind_last_search" = "foo"
+@test 'test _bang_last_search' "$_bang_last_search" = "foo"
 
 @test 'test regex match !#' (string match -q -r $_bang_regex '!#') $status -eq 0
 mock_commandline 'cd go !#'
@@ -518,5 +534,35 @@ set output (_bang '^three1^ten^')
 @test 'test regex match test ^three1^ten' (string match -q -r $_bang_gsub_regex '^three1^ten') $status -eq 0
 set output (_bang '^three1^ten')
 @test 'test ^three1^ten' "$output" = 'cd three four five six seven'
+
+deinit
+
+init bang_empty
+
+@test 'test regex match !^' (string match -q -r $_bang_special_regex '!^') $status -eq 0
+set output (_bang '!^')
+@test 'test !^' "$output" = ''
+
+@test 'test regex match !$' (string match -q -r $_bang_special_regex '!$') $status -eq 0
+set output (_bang '!$')
+@test 'test !$' "$output" = ''
+
+@test 'test regex match !*' (string match -q -r $_bang_special_regex '!*') $status -eq 0
+set output (_bang '!*')
+@test 'test !*' "$output" = ''
+
+@test 'test regex match !%' (string match -q -r $_bang_special_regex '!%') $status -eq 0
+set output (_bang '!%')
+@test 'test !%' "$output" = ''
+_bang '!?bar foobar?'
+set output (_bang '!%')
+@test 'test !%' "$output" = ''
+_bang '!?foo bar foobar?'
+set output (_bang '!%')
+@test 'test !%' "$output" = ''
+
+@test 'test regex match !!' (string match -q -r $_bang_regex '!!') $status -eq 0
+set output (_bang !!)
+@test 'test !!' "$output" = ''
 
 deinit
